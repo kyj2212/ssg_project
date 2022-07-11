@@ -1,5 +1,6 @@
 
 import com.ll.exam.Rq;
+import com.ll.exam.WiseSaying;
 import org.junit.Test;
 
 import java.io.*;
@@ -47,8 +48,26 @@ public class AppTest {
         assertEquals(1, paramId);
     }
 
-    public void test_delete(){
-
+    @Test
+    public void test_object__tojson(){
+        WiseSaying ws = new WiseSaying(1,"내 죽음을 적에게 알리지 말라","이순신");
+        assertEquals("WiseSaying{id=1, saying=\'내 죽음을 적에게 알리지 말라\', author=\'이순신\'}",ws.toString());
+    }
+    @Test
+    public void test_json__parse(){
+        String json = "WiseSaying{id=1, saying=\'내 죽음을 적에게 알리지 말라\', author=\'이순신\'}";
+        WiseSaying ws = new WiseSaying(json);
+        assertEquals(1, ws.getId());
+        assertEquals("내 죽음을 적에게 알리지 말라", ws.getSaying());
+        assertEquals("이순신", ws.getAuthor());
     }
 
+
+    @Test
+    public void test_ws_replace(){
+        WiseSaying ws = new WiseSaying(1,"명언1","작가1");
+        String newSaying = "명언1-1";
+        ws.replaceSaying(newSaying);
+        assertEquals(newSaying,ws.getSaying());
+    }
 }

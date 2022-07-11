@@ -13,8 +13,8 @@ public class App {
 
     static int lastidx=0;
     static int max = 10;
-    static  ArrayList<JSONObject> jsonlist = new ArrayList<>();
-
+    //static  ArrayList<JSONObject> jsonlist = new ArrayList<>();
+    static ArrayList<WiseSaying> wslist = new ArrayList<>();
 
     public void run() throws IOException, ParseException {
 
@@ -36,7 +36,7 @@ public class App {
 
             Rq rq = new Rq(br.readLine().trim());
 
-            String cmd = rq.getPath();
+            //String cmd = rq.getPath();
 
             switch (rq.getPath()){
                 case "exit" :
@@ -85,13 +85,13 @@ public class App {
         String path = ".\\json\\WiseSaying"+lastidx+".json";
 
         WiseSaying ws = new WiseSaying(lastidx,saying,author);
-        JSONObject obj = new JSONObject();
-        obj.put("id",ws.id);
-        obj.put("author",ws.author);
-        obj.put("saying",ws.saying);
-        jsonlist.add(obj);
+        //JSONObject obj = new JSONObject();
+       // obj.put("id",ws.id);
+       // obj.put("author",ws.author);
+       // obj.put("saying",ws.saying);
+        wslist.add(ws);
         PrintWriter pw = new PrintWriter(new FileWriter(path));
-        pw.write(obj.toString());
+        pw.write(ws.toString());
         pw.flush();
 
         pw.close();
@@ -104,22 +104,33 @@ public class App {
         System.out.println("Num / Author / Saying");
         System.out.println("----------------------");
        // ArrayList<JSONObject> jsonlist = readFile();
-        for(JSONObject json : jsonlist)
-            System.out.println(json.get("id")+" / "+ json.get("author")+" / "+ json.get("saying"));
+
+        for(WiseSaying ws : wslist){
+
+            System.out.println(ws.getId()+" / "+ ws.getAuthor()+" / "+ ws.getSaying());
+        }
+
+
+      //  for(JSONObject json : jsonlist)
+      //      System.out.println(json.get("id")+" / "+ json.get("author")+" / "+ json.get("saying"));
 
     }
 
 
-    static ArrayList<JSONObject> readFile() throws IOException, ParseException {
+   // static ArrayList<JSONObject> readFile() throws IOException, ParseException {
+    static ArrayList<WiseSaying> readFile() throws IOException {
+
         File[] filelist = new File(".\\json").listFiles();
-      //  ArrayList<JSONObject> jsonlist = new ArrayList<>();
         for(File file : filelist){
 
             if(file.isFile()&&file.canRead()){
-                JSONParser parser = new JSONParser();
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                wslist.add(new WiseSaying(br.readLine()));
 
-                Object obj = parser.parse(new FileReader(file));
-                 jsonlist.add((JSONObject)obj);
+               // JSONParser parser = new JSONParser();
+
+              //  Object obj = parser.parse(new FileReader(file));
+              //   jsonlist.add((JSONObject)obj);
 
                 //JSONTokener tokener = new JSONTokener(new FileReader(file));
                 // Object obj = tokener.nextValue();
@@ -127,37 +138,88 @@ public class App {
             }
 
         }
-        return jsonlist;
+        return wslist;
     }
 
     static void delete(int id)  {
 
        // ArrayList<JSONObject> jsonlist = readFile();
 
-        JSONObject del=null;
-        for(JSONObject json : jsonlist){
-            if((int)json.get("id")==id){
-                del=json;
+        WiseSaying del = null;
+        for(WiseSaying ws : wslist){
+            if(ws.getId()==id){
+                del=ws;
                 break;
             }
         }
+        // WiseSaying del = wslist.get(id);
+        if(del==null)
+            System.out.println("명령"+id+"은 없습니다.");
+        else{
+            wslist.remove(del);
+            deleteFile(id);
+            System.out.println("명언"+id+"이 삭제되었습니다.");
+        }
+
+
+   /*
+        JSONObject del=null;
+        for(JSONObject json : jsonlist){
+            if((int)json.get("id")==id){
+               del=json;
+                break;
+            }
+       }
         if(del==null)
             System.out.println("명령"+id+"은 없습니다.");
         else{
             jsonlist.remove(del);
             System.out.println("명언"+id+"이 삭제되었습니다.");
         }
+    */
 
+
+    }
+
+    static void deleteFile(int id){
         // File 지우기
         File file = new File(".\\json\\WiseSaying"+id+".json");
         if(file.exists()){
-            file.delete();
+            if(file.delete())
             System.out.println("해당 file 삭제됨");
+            else System.out.println("file 못지움");
         }
         else System.out.println("해당 file 없음");
     }
 
-    static void modify(int id, String newSaying) {
+    static void updateFile(int id,WiseSaying ws) throws IOException {
+        // File update
+        File file = new File(".\\json\\WiseSaying"+id+".json");
+        if(file.exists()){
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
+            pw.write(ws.toString());
+            pw.flush();
+
+            pw.close();
+                System.out.println("해당 file 수정됨");
+        }
+        else System.out.println("해당 file 없음");
+    }
+    static void modify(int id, String newSaying) throws IOException {
+
+        for(WiseSaying ws : wslist){
+            if(ws.getId()==id){
+                System.out.println("기존 명언 : "+ws.getSaying());
+                //ws.replace("saying",newSaying); // key로 받는거 추후 추가
+                ws.replaceSaying(newSaying);
+                updateFile(id,ws);
+                System.out.println("새 명언 : "+ws.getSaying());
+            }
+        }
+
+
+
+        /*
         for(JSONObject json : jsonlist){
             if((int)json.get("id")==id){
                 System.out.println("기존 명언 : "+json.get("saying"));
@@ -165,6 +227,8 @@ public class App {
                 System.out.println("새 명언 : "+json.get("saying"));
             }
         }
+
+         */
 
     }
 
