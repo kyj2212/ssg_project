@@ -5,16 +5,35 @@ public class WiseSaying {
     String saying;
     String author;
 
-    public WiseSaying(String json){
+
+    /* 싱글턴 패턴으로 만들어보기 */
+    private static WiseSaying instance;
+
+    private WiseSaying(String json){
         this.id=parseId(json);
         this.saying=parseSaying(json);
         this.author=parseAuthor(json);
     }
-    public WiseSaying(int id, String saying, String author){
+    private WiseSaying(int id, String saying, String author){
         this.id =id;
         this.saying=saying;
         this.author=author;
     }
+
+    public static WiseSaying getInstance(String json){
+        if(instance == null) {
+            instance = new WiseSaying(json);
+        }
+        return instance;
+    }
+    public static WiseSaying getInstance(int id, String saying, String author){
+        if(instance == null) {
+            instance = new WiseSaying(id,saying,author);
+        }
+        return instance;
+    }
+
+
 
     public int parseId(String json){
        // System.out.println(json.split("id\\=",2)[1].split(",")[0]);

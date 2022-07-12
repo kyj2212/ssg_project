@@ -75,7 +75,7 @@ public class App {
         for(File file : filelist){
             if(file.isFile()&&file.canRead()){
                 BufferedReader br = new BufferedReader(new FileReader(file));
-                wslist.add(new WiseSaying(br.readLine()));
+                wslist.add(WiseSaying.getInstance(br.readLine()));
             }
         }
         lastidx = wslist.size();
@@ -86,7 +86,7 @@ public class App {
     public static void regist(int idx, String saying, String author) throws IOException {
         //String path = ".\\json\\WiseSaying"+lastidx+".json";
 
-        WiseSaying ws = new WiseSaying(idx,saying,author);
+        WiseSaying ws = WiseSaying.getInstance(idx,saying,author);
         wslist.add(ws);
 
         addFile(idx, ws);
