@@ -16,6 +16,9 @@ public class AppTest {
         assertEquals(30,rs);
     }
 
+
+    /*입출력 테스트*/
+    // 1. 입력테스트 (Reader)
     @Test
     public void test_reader() throws IOException {
         String input = """
@@ -34,6 +37,29 @@ public class AppTest {
         assertEquals("이순신", author);
 
     }
+
+    //2. 출력 테스트 ( 표준 출력 -> 파일출력으로 redirect)
+    @Test
+    public void test_redirect_printstream() throws IOException {
+
+        File file = new File("test_sysout.txt");
+        PrintStream pr = new PrintStream(new FileOutputStream(file));
+        //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("test_filewriter.txt"))));
+
+
+        System.out.println("It's console");
+
+        System.setOut(pr);
+
+        System.out.println("It's file");
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+
+        assertEquals("It's file",br.readLine());
+
+    }
+
 
     @Test
     public void Rq__getPath(){
