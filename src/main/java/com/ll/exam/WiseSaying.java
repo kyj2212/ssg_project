@@ -6,34 +6,22 @@ public class WiseSaying {
     String author;
 
 
-    /* 싱글턴 패턴으로 만들어보기 */
-    private static WiseSaying instance;
+    /* 싱글턴 패턴으로 하면 안됨
+    * 명언은 계속 바뀌니까.
+    * 명언은 static 아니라 계속 생성이 되어야 함.
+    * */
 
-    private WiseSaying(String json){
+
+    public WiseSaying(String json){
         this.id=parseId(json);
         this.saying=parseSaying(json);
         this.author=parseAuthor(json);
     }
-    private WiseSaying(int id, String saying, String author){
+    public WiseSaying(int id, String saying, String author){
         this.id =id;
         this.saying=saying;
         this.author=author;
     }
-
-    public static WiseSaying getInstance(String json){
-        if(instance == null) {
-            instance = new WiseSaying(json);
-        }
-        return instance;
-    }
-    public static WiseSaying getInstance(int id, String saying, String author){
-        if(instance == null) {
-            instance = new WiseSaying(id,saying,author);
-        }
-        return instance;
-    }
-
-
 
     public int parseId(String json){
        // System.out.println(json.split("id\\=",2)[1].split(",")[0]);

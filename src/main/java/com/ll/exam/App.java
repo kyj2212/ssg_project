@@ -75,7 +75,7 @@ public class App {
         for(File file : filelist){
             if(file.isFile()&&file.canRead()){
                 BufferedReader br = new BufferedReader(new FileReader(file));
-                wslist.add(WiseSaying.getInstance(br.readLine()));
+                wslist.add(new WiseSaying(br.readLine()));
             }
         }
         lastidx = wslist.size();
@@ -86,7 +86,7 @@ public class App {
     public static void regist(int idx, String saying, String author) throws IOException {
         //String path = ".\\json\\WiseSaying"+lastidx+".json";
 
-        WiseSaying ws = WiseSaying.getInstance(idx,saying,author);
+        WiseSaying ws = new WiseSaying(idx,saying,author);
         wslist.add(ws);
 
         addFile(idx, ws);
@@ -100,10 +100,12 @@ public class App {
 
     public static void addFile (int idx, WiseSaying ws) throws FileNotFoundException {
         File path = new File(".\\json\\WiseSaying"+idx+".json");
+        PrintStream sysout = System.out;
         PrintStream pr = new PrintStream(new FileOutputStream(path));
         System.setOut(pr);
         System.out.println(ws);
-        //pr.close();
+        System.setOut(sysout);
+        pr.close();
     }
 
 
