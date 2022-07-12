@@ -67,10 +67,15 @@ public class AppTest {
 
 
     @Test
-    public void Rq__getPath(){
+    public void Rq__getPath() {
         Rq rq = new Rq("delete?id=1");
         String path = rq.getPath();
         assertEquals("delete", path);
+
+        // param 이 없을 때 getParam 잘되도록
+        Rq rq2 = new Rq("list");
+        assertEquals("list",rq2.getPath());
+
     }
     @Test
     public void Rq__getIdParam(){
@@ -94,9 +99,6 @@ public class AppTest {
         assertEquals("nexearch, top_hty, 1, utf8, 사과",where+", "+sm+", "+fbm+", "+ie+", "+query);
 
 
-        // param 이 없을 때 getParam 잘되도록
-        Rq rq2 = new Rq("list");
-        assertEquals("list",rq2.getPath());
     }
 
 
