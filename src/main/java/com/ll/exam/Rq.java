@@ -12,38 +12,59 @@ import java.util.StringTokenizer;
 public class Rq {
     String url;
     String path;
-    //String queryStr;
+    String queryStr;
     //String param;
 
-    HashMap<String,String> queryStr;
+    //HashMap<String,String> queryStr;
+    HashMap<String,String> query;
 
     public Rq(String url) {
         this.url=url;
         this.path=getPath();
-        this.queryStr=getQueryStr();
+    //    this.queryStr=getQueryStr();
+     //   this.query=getQuery();
     }
 
+    public HashMap<String,String> getQuery(){
+
+        query = new HashMap<>();
+        String [] q = queryStr.split("\\=*\\&");
+
+        for(int i=0;i<q.length;i++){
+            StringTokenizer token = new StringTokenizer(q[i],"=");
+            query.put(token.nextToken(),token.nextToken());
+        }
+        return query;
+    }
 
     // delete?id=2
-    public HashMap<String,String> getQueryStr(){
-
-        queryStr = new HashMap<>();
-        String [] q = url.split("\\?",2);
-        if(q.length>1) {
-            String [] param = q[1].split("=",2);
-            queryStr.put(param[0],getIntParam(param[1]));
-            return queryStr;
-        }else return null;
+    public String getQueryStr(){
+        // path 이후의 queryStr만 가져오기
+        return url.split("\\?",2)[1];
     }
 
     public String getPath() {
-        String [] q = url.split("\\?",2);
+       // StringTokenizer token = new StringTokenizer(url,"?");
+        String [] q = url.split("\\?");
+        if(q.length>1){
+            this.queryStr=getQueryStr();
+            this.query=getQuery();
+        }
         return q[0];
     }
 
 
-    public String getIntParam(String str){
-        //return Integer.parseInt(str.split("\\&", 2)[0]);
-        return str.split("\\&", 2)[0];
+    public boolean isParam(String param){
+        return query.keySet().contains(param);
+    }
+    public int getIntParam(String param){
+        if(isParam(param))
+            return Integer.parseInt(query.get(param));
+        else return -1;
+    }
+    public String getStringParam(String param){
+        if(isParam(param))
+            return query.get(param);
+        else return null;
     }
 }

@@ -47,7 +47,7 @@ public class App {
                     list();
                     break;
                 case "delete" :
-                    id = Integer.parseInt(rq.getQueryStr().get("id"));
+                    id = rq.getIntParam("id");
                     if(id!=-1)
                         delete(id);
                     else {
@@ -57,7 +57,7 @@ public class App {
                     break;
                 case "modify" :
                     System.out.println("modify?id=1 와 같은 형태로 입력해주세요");
-                    id = Integer.parseInt(rq.getQueryStr().get("id"));
+                    id = rq.getIntParam("id");
                     System.out.println("새 명언을 입력하세요.");
                     String newSaying = br.readLine();
                     modify(id,newSaying);

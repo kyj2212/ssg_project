@@ -75,9 +75,30 @@ public class AppTest {
     @Test
     public void Rq__getIdParam(){
         Rq rq = new Rq("delete?id=1");
-        int paramId = Integer.parseInt(rq.getQueryStr().get("id"));
+        int paramId = rq.getIntParam("id");
         assertEquals(1, paramId);
     }
+
+    @Test
+    public void Rq__getParam(){
+
+        // queryStr 에 여러 파라미터가 있을 때
+        Rq rq = new Rq("search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=사과");
+
+        String where = rq.getStringParam("where");
+        String sm = rq.getStringParam("sm");
+        int fbm = rq.getIntParam("fbm");
+        String ie = rq.getStringParam("ie");
+        String query = rq.getStringParam("query");
+
+        assertEquals("nexearch, top_hty, 1, utf8, 사과",where+", "+sm+", "+fbm+", "+ie+", "+query);
+
+
+        // param 이 없을 때 getParam 잘되도록
+        Rq rq2 = new Rq("list");
+        assertEquals("list",rq2.getPath());
+    }
+
 
     @Test
     public void test_object__tojson(){
