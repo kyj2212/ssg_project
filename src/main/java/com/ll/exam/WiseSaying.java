@@ -5,13 +5,6 @@ public class WiseSaying {
     String saying;
     String author;
 
-
-    /* 싱글턴 패턴으로 하면 안됨
-    * 명언은 계속 바뀌니까.
-    * 명언은 static 아니라 계속 생성이 되어야 함.
-    * */
-
-
     public WiseSaying(String json){
         this.id=parseId(json);
         this.saying=parseSaying(json);

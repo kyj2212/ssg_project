@@ -75,7 +75,7 @@ public class AppTest {
     @Test
     public void Rq__getIdParam(){
         Rq rq = new Rq("delete?id=1");
-        int paramId = rq.getIdParam();
+        int paramId = Integer.parseInt(rq.getQueryStr().get("id"));
         assertEquals(1, paramId);
     }
 
