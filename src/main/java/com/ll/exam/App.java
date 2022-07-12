@@ -40,7 +40,7 @@ public class App {
                     String saying= br.readLine();
                     System.out.printf("Writer : ");
                     String writer= br.readLine();
-                    regist(saying,writer);
+                    regist(++lastidx,saying,writer);
 
                     break;
                 case "list" :
@@ -68,23 +68,47 @@ public class App {
         System.out.println("Program successfully exited");
     }
 
-    static void regist(String saying, String author) throws IOException {
 
-        lastidx++;
-        String path = ".\\json\\WiseSaying"+lastidx+".json";
+    public static ArrayList<WiseSaying> readFile() throws IOException {
 
-        WiseSaying ws = new WiseSaying(lastidx,saying,author);
-        wslist.add(ws);
-
-        PrintWriter pw = new PrintWriter(new FileWriter(path));
-        pw.write(ws.toString());
-        pw.flush();
-        pw.close();
-
-        System.out.println(lastidx+"번 명언이 등록되었습니다.");
+        File[] filelist = new File(".\\json").listFiles();
+        for(File file : filelist){
+            if(file.isFile()&&file.canRead()){
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                wslist.add(new WiseSaying(br.readLine()));
+            }
+        }
+        lastidx = wslist.size();
+        return wslist;
     }
 
-    static void list()  {
+
+    public static void regist(int idx, String saying, String author) throws IOException {
+        //String path = ".\\json\\WiseSaying"+lastidx+".json";
+
+        WiseSaying ws = new WiseSaying(idx,saying,author);
+        wslist.add(ws);
+
+        addFile(idx, ws);
+       // PrintWriter pw = new PrintWriter(new FileWriter(path));
+       // pw.write(ws.toString());
+       // pw.flush();
+      //  pw.close();
+
+        System.out.println(idx+"번 명언이 등록되었습니다.");
+    }
+
+    public static void addFile (int idx, WiseSaying ws) throws FileNotFoundException {
+        File path = new File(".\\json\\WiseSaying"+idx+".json");
+        PrintStream pr = new PrintStream(new FileOutputStream(path));
+        System.setOut(pr);
+        System.out.println(ws);
+        //pr.close();
+    }
+
+
+
+    public static void list()  {
         System.out.println("Num / Author / Saying");
         System.out.println("----------------------");
 
@@ -94,22 +118,8 @@ public class App {
     }
 
 
-    static ArrayList<WiseSaying> readFile() throws IOException {
 
-        File[] filelist = new File(".\\json").listFiles();
-        for(File file : filelist){
-
-            if(file.isFile()&&file.canRead()){
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                wslist.add(new WiseSaying(br.readLine()));
-
-            }
-
-        }
-        return wslist;
-    }
-
-    static void delete(int id)  {
+    public static void delete(int id)  {
         WiseSaying del = null;
         for(WiseSaying ws : wslist){
             if(ws.getId()==id){
@@ -126,7 +136,7 @@ public class App {
         }
     }
 
-    static void deleteFile(int id){
+    public static void deleteFile(int id){
         // File 지우기
         File file = new File(".\\json\\WiseSaying"+id+".json");
         if(file.exists()){
@@ -137,7 +147,7 @@ public class App {
         else System.out.println("해당 file 없음");
     }
 
-    static void updateFile(int id,WiseSaying ws) throws IOException {
+    public static void updateFile(int id,WiseSaying ws) throws IOException {
         // File update
         File file = new File(".\\json\\WiseSaying"+id+".json");
         if(file.exists()){
@@ -151,7 +161,7 @@ public class App {
         else System.out.println("해당 file 없음");
     }
 
-    static void modify(int id, String newSaying) throws IOException {
+    public static void modify(int id, String newSaying) throws IOException {
 
         for(WiseSaying ws : wslist){
             if(ws.getId()==id){

@@ -1,10 +1,10 @@
 
+import com.ll.exam.App;
 import com.ll.exam.Rq;
 import com.ll.exam.WiseSaying;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,18 +46,23 @@ public class AppTest {
         PrintStream pr = new PrintStream(new FileOutputStream(file));
         //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("test_filewriter.txt"))));
 
-
         System.out.println("It's console");
-
         System.setOut(pr);
-
         System.out.println("It's file");
 
         BufferedReader br = new BufferedReader(new FileReader(file));
-
-
         assertEquals("It's file",br.readLine());
 
+    }
+
+    // regist 테스트
+    @Test
+    public void test_regist() throws IOException {
+        App.regist(1,"내 죽음을 적에게 알리지 말라","이순신");
+        BufferedReader br = new BufferedReader(new FileReader(".\\json\\WiseSaying1.json"));
+
+        assertEquals(new WiseSaying(1,"내 죽음을 적에게 알리지 말라","이순신").toString(),br.readLine());
+        br.close();
     }
 
 
