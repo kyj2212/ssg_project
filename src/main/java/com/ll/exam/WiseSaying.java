@@ -58,5 +58,9 @@ public class WiseSaying {
     public void replace(String key,String newVal){
 
     }
+
+    public void replaceAuthor(String newAuthor) {
+        this.author=newAuthor;
+    }
 }
 

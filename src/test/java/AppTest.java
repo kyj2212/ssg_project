@@ -1,7 +1,5 @@
 
-import com.ll.exam.App;
-import com.ll.exam.Rq;
-import com.ll.exam.WiseSaying;
+import com.ll.exam.*;
 import org.junit.Test;
 
 import java.io.*;
@@ -58,12 +56,16 @@ public class AppTest {
     // regist 테스트
     @Test
     public void test_regist() throws IOException {
-        App.regist(1,"내 죽음을 적에게 알리지 말라","이순신");
+        WiseSayingController wc = new WiseSayingController();
+        WiseSayingRepo wr = new WiseSayingRepo();
+        //wc.regist("내 죽음을 적에게 알리지 말라","이순신");
+        wr.regist("내 죽음을 적에게 알리지 말라","이순신");
         BufferedReader br = new BufferedReader(new FileReader(".\\json\\WiseSaying1.json"));
 
         assertEquals(new WiseSaying(1,"내 죽음을 적에게 알리지 말라","이순신").toString(),br.readLine());
         br.close();
     }
+
 
 
     @Test
@@ -123,5 +125,53 @@ public class AppTest {
         String newSaying = "명언1-1";
         ws.replaceSaying(newSaying);
         assertEquals(newSaying,ws.getSaying());
+    }
+
+    @Test
+    public void test_delete_file(){
+
+        File file = new File("test.txt");
+        file.delete();
+        assertEquals(false,file.exists());
+
+    }
+
+
+
+    // expected을 어떻게 구현해야할지?
+    // 현재 파일을 읽어서 print하고, 그거와 메소드를 비교해야 하나?
+
+    @Test
+    public void test_list() throws IOException {
+        WiseSayingController control = new WiseSayingController();
+
+        File file = new File("test_list.txt");
+        PrintStream pr = new PrintStream(file);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        PrintStream sysout = System.out;
+        System.setOut(pr);
+
+        control.list();
+        System.setOut(sysout);
+
+        //assertEquals(,br.readLine());
+    }
+
+    // expected을 어떻게 구현해야할지?
+
+    @Test
+    public void test_wsr__getwslist() throws IOException {
+
+        WiseSayingRepo wr = new WiseSayingRepo();
+        wr.getWslist();
+    }
+
+    // expected을 어떻게 구현해야 할지
+    @Test
+    public void test_wsr__delete(){
+     //   int id = 1;
+     //  WiseSayingController wsc = new WiseSayingController();
+     //   wsc.isDelete(rq);
+
     }
 }
