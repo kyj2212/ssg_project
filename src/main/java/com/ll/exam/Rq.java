@@ -2,69 +2,61 @@ package com.ll.exam;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 
 /*Request class*/
-
 /* queryStr의 param 이 id 만 있는 것이 아니므로 HashMap으로 구성하자.*/
 
 public class Rq {
-    String url;
-    String path;
-    String queryStr;
-    //String param;
-
-    //HashMap<String,String> queryStr;
-    HashMap<String,String> query;
+    private String url;
+    private String path;
+    private String queryParams=null;
+    Map<String,String> queryParmMap;
 
     public Rq(String url) {
         this.url=url;
-        this.path=getPath();
-    //    this.queryStr=getQueryStr();
-     //   this.query=getQuery();
-    }
-
-    public HashMap<String,String> getQuery(){
-
-        query = new HashMap<>();
-        String [] q = queryStr.split("\\=*\\&");
-
-        for(int i=0;i<q.length;i++){
-            StringTokenizer token = new StringTokenizer(q[i],"=");
-            query.put(token.nextToken(),token.nextToken());
+        String [] urlBits=getBits(url,"\\?");
+        this.path=urlBits[0];
+        if(urlBits.length >1) { // 없을 때는 초기값 null
+            this.queryParams=urlBits[1];
+            this.queryParmMap = getQueryParm();
         }
-        return query;
     }
 
-    // delete?id=2
-    public String getQueryStr(){
-        // path 이후의 queryStr만 가져오기
-        return url.split("\\?",2)[1];
+    private String[] getBits(String url, String regex){
+        return url.split(regex);
     }
 
-    public String getPath() {
-       // StringTokenizer token = new StringTokenizer(url,"?");
-        String [] q = url.split("\\?");
-        if(q.length>1){
-            this.queryStr=getQueryStr();
-            this.query=getQuery();
+
+    public Map<String,String> getQueryParm(){
+
+        queryParmMap = new HashMap<>();
+        String [] paramBits = getBits(queryParams, "\\=*\\&");
+
+        for(int i=0;i<paramBits.length;i++){
+            StringTokenizer token = new StringTokenizer(paramBits[i],"=");
+            queryParmMap.put(token.nextToken(),token.nextToken());
         }
-        return q[0];
+        return queryParmMap;
     }
 
-
-    public boolean isParam(String param){
-        return query.keySet().contains(param);
+    public boolean isParamName(String paramName){
+        return queryParmMap.keySet().contains(paramName);
     }
-    public int getIntParam(String param){
-        if(isParam(param))
-            return Integer.parseInt(query.get(param));
+    public int getIntParamValue(String paramName){
+        if(isParamName(paramName))
+            return Integer.parseInt(queryParmMap.get(paramName));
         else return -1;
     }
-    public String getStringParam(String param){
-        if(isParam(param))
-            return query.get(param);
+    public String getStringParamValue(String paramName){
+        if(isParamName(paramName))
+            return queryParmMap.get(paramName);
         else return null;
     }
+    public String getPath() {
+        return this.path;
+    }
+
 }

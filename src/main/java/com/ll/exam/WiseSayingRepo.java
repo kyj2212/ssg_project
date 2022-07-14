@@ -2,13 +2,20 @@ package com.ll.exam;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WiseSayingRepo {
 
-    static ArrayList<WiseSaying> wslist;
-    static int lastidx;
+    private List<WiseSaying> wslist;
+    private int lastidx;
 
     FileController fc = new FileController();
+
+    WiseSayingRepo () throws IOException {
+        this.wslist=getWslist();
+        this.lastidx=wslist.size();
+    }
+
 
 
     public WiseSaying getWiseSaying(int id){
@@ -20,10 +27,10 @@ public class WiseSayingRepo {
         return null;
     }
 
-    public void getWslist() throws IOException {
+    public List<WiseSaying> getWslist() throws IOException {
         wslist = new ArrayList<>();
         fc.readFile(wslist);
-        lastidx=wslist.size();
+        return wslist;
     }
 
     public void regist(String saying, String author) throws IOException {

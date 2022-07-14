@@ -8,6 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
 
+
+    static String input = """
+                regist
+                내 죽음을 적에게 알리지 말라
+                이순신
+                """.stripIndent();
+    static InputStream in = new ByteArrayInputStream(input.getBytes());
+
+
     @Test
     public void test_temp(){
         int rs = 10+20;
@@ -19,12 +28,7 @@ public class AppTest {
     // 1. 입력테스트 (Reader)
     @Test
     public void test_reader() throws IOException {
-        String input = """
-                regist
-                내 죽음을 적에게 알리지 말라
-                이순신
-                """.stripIndent();
-        InputStream in = new ByteArrayInputStream(input.getBytes());
+
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String cmd = br.readLine().trim();
         String saying = br.readLine().trim();
@@ -57,11 +61,10 @@ public class AppTest {
     @Test
     public void test_regist() throws IOException {
         WiseSayingController wc = new WiseSayingController();
-        WiseSayingRepo wr = new WiseSayingRepo();
-        //wc.regist("내 죽음을 적에게 알리지 말라","이순신");
-        wr.regist("내 죽음을 적에게 알리지 말라","이순신");
-        BufferedReader br = new BufferedReader(new FileReader(".\\json\\WiseSaying1.json"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        wc.regist(br);
 
+        br = new BufferedReader(new FileReader(".\\json\\WiseSaying1.json"));
         assertEquals(new WiseSaying(1,"내 죽음을 적에게 알리지 말라","이순신").toString(),br.readLine());
         br.close();
     }
@@ -82,7 +85,7 @@ public class AppTest {
     @Test
     public void Rq__getIdParam(){
         Rq rq = new Rq("delete?id=1");
-        int paramId = rq.getIntParam("id");
+        int paramId = rq.getIntParamValue("id");
         assertEquals(1, paramId);
     }
 
@@ -92,11 +95,11 @@ public class AppTest {
         // queryStr 에 여러 파라미터가 있을 때
         Rq rq = new Rq("search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=사과");
 
-        String where = rq.getStringParam("where");
-        String sm = rq.getStringParam("sm");
-        int fbm = rq.getIntParam("fbm");
-        String ie = rq.getStringParam("ie");
-        String query = rq.getStringParam("query");
+        String where = rq.getStringParamValue("where");
+        String sm = rq.getStringParamValue("sm");
+        int fbm = rq.getIntParamValue("fbm");
+        String ie = rq.getStringParamValue("ie");
+        String query = rq.getStringParamValue("query");
 
         assertEquals("nexearch, top_hty, 1, utf8, 사과",where+", "+sm+", "+fbm+", "+ie+", "+query);
 
@@ -137,13 +140,26 @@ public class AppTest {
     }
 
 
+    @Test
+    public void test__id__numbering(){
+        // 파일을 remove 후,
+        // remove 한 file 이 가지고 있던 id 는
+        // 재사용이 가능한가?
+
+        // 해당 id 를 재사용하게될때,
+        // numbering의 순서는 더 앞에 있는 번호가 우선시 되야 하는 것인지
+
+    }
+
+
+
 
     // expected을 어떻게 구현해야할지?
     // 현재 파일을 읽어서 print하고, 그거와 메소드를 비교해야 하나?
 
     @Test
     public void test_list() throws IOException {
-        WiseSayingController control = new WiseSayingController();
+        //WiseSayingController control = new WiseSayingController();
 
         File file = new File("test_list.txt");
         PrintStream pr = new PrintStream(file);
@@ -151,7 +167,7 @@ public class AppTest {
         PrintStream sysout = System.out;
         System.setOut(pr);
 
-        control.list();
+      // control.list();
         System.setOut(sysout);
 
         //assertEquals(,br.readLine());
@@ -162,8 +178,8 @@ public class AppTest {
     @Test
     public void test_wsr__getwslist() throws IOException {
 
-        WiseSayingRepo wr = new WiseSayingRepo();
-        wr.getWslist();
+       // WiseSayingRepo wr = new WiseSayingRepo();
+      //  wr.getWslist();
     }
 
     // expected을 어떻게 구현해야 할지

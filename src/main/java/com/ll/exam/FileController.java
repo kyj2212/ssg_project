@@ -1,11 +1,11 @@
 package com.ll.exam;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class FileController {
 
-    public ArrayList<WiseSaying> readFile(ArrayList<WiseSaying> wslist) throws IOException {
+    public List<WiseSaying> readFile(List<WiseSaying> wslist) throws IOException {
 
         File[] filelist = new File(".\\json").listFiles();
         for(File file : filelist){

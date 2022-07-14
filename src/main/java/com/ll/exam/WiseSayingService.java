@@ -4,17 +4,17 @@ import java.io.*;
 
 public class WiseSayingService {
 
-    WiseSayingRepo repo = new WiseSayingRepo();
+    private WiseSayingRepo repo;
+
+    WiseSayingService() throws IOException {
+        this.repo=new WiseSayingRepo();
+    }
 
 
     public void delete(int id){
-
         WiseSaying ws = repo.getWiseSaying(id);
         repo.delete(id, ws);
-
-
     }
-
 
     public void load() throws IOException {
         repo.getWslist();
