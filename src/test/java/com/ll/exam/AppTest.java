@@ -1,10 +1,13 @@
+package com.ll.exam;
 
-import com.ll.exam.*;
+import com.ll.exam.Rq;
+import com.ll.exam.WiseSaying;
+import com.ll.exam.WiseSayingController;
 import org.junit.Test;
 
 import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
 
@@ -156,6 +159,7 @@ public class AppTest {
 
     // expected을 어떻게 구현해야할지?
     // 현재 파일을 읽어서 print하고, 그거와 메소드를 비교해야 하나?
+    // AppTestRunner 을 통해서 입출력을 파일이 아닌 화면으로 리다이렉팅하여 실행하기
 
     @Test
     public void test_list() throws IOException {
