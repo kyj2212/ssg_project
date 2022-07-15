@@ -8,10 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestUtil {
 
+    // setout console backup
     private final static PrintStream sysout = System.out;
     public static void toConsoleRedirection(){
         System.setOut(sysout);
     }
+
 
     // setout printstream -> file
     public static void toFileRedirection(String filename) throws FileNotFoundException {
