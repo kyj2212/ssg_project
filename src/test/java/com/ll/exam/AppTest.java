@@ -4,12 +4,35 @@ import com.ll.exam.Rq;
 import com.ll.exam.WiseSaying;
 import com.ll.exam.WiseSayingController;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
+
+/*
+ * App declaration
+ * 1. static mode = this is production
+ * 2. private inputstream
+ * 3. no constructor --> why? constructor에서 controller를 생성할경우? App()를 생성할때 controller를 잡는다면?
+ *
+ * App do what?
+ * 1. get Controller class
+ * 2. read client input, and get path.
+ * 3. each case, call Controller's method
+ *
+ * */
+
 public class AppTest {
+
+
+    // 시작전에 한번 static으로 mode="test" 입력
+    @BeforeAll
+    public void beforeAll(){
+        new App().setMode("test");
+    }
 
 
     static String input = """
@@ -74,6 +97,10 @@ public class AppTest {
 
 
 
+    /* 2. read client input, and get path.
+     */
+
+    // 2-1. 입력값에서 path 가져오기
     @Test
     public void Rq__getPath() {
         Rq rq = new Rq("delete?id=1");
@@ -83,18 +110,18 @@ public class AppTest {
         // param 이 없을 때 getParam 잘되도록
         Rq rq2 = new Rq("list");
         assertEquals("list",rq2.getPath());
-
     }
+
+    // 2.2 url에서 id 잘가져오는지 테스트
     @Test
     public void Rq__getIdParam(){
         Rq rq = new Rq("delete?id=1");
         int paramId = rq.getIntParamValue("id");
         assertEquals(1, paramId);
     }
-
+    // 2.3 파마미터 열거개 있는 케이스 추가.
     @Test
     public void Rq__getParam(){
-
         // queryStr 에 여러 파라미터가 있을 때
         Rq rq = new Rq("search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=사과");
 
@@ -103,10 +130,7 @@ public class AppTest {
         int fbm = rq.getIntParamValue("fbm");
         String ie = rq.getStringParamValue("ie");
         String query = rq.getStringParamValue("query");
-
         assertEquals("nexearch, top_hty, 1, utf8, 사과",where+", "+sm+", "+fbm+", "+ie+", "+query);
-
-
     }
 
 

@@ -16,11 +16,18 @@ public class App {
     * 4.
     * */
 
-    static final String mode = "production";
+    static String mode = "production";
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+    public static String getBaseDir() {
+        return mode;
+    }
 
 
+    // set mode 추가, 테스트 컨트롤러에서 testmode로 동작
+    public void setMode(String mode){
+        this.mode=mode;
+    }
 
 
     public void run() throws IOException {
