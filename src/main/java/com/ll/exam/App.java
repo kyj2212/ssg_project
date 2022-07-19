@@ -19,8 +19,8 @@ public class App {
     static String mode = "production";
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static String getBaseDir() {
-        return mode;
+    public static String getDataDir() {
+        return mode+"_data";
     }
 
 
@@ -28,6 +28,7 @@ public class App {
     public void setMode(String mode){
         this.mode=mode;
     }
+
 
 
     public void run() throws IOException {

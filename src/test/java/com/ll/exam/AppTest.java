@@ -1,11 +1,8 @@
 package com.ll.exam;
 
-import com.ll.exam.Rq;
-import com.ll.exam.WiseSaying;
-import com.ll.exam.WiseSayingController;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+
 
 import java.io.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
 
+    static String input = """
+                regist
+                내 죽음을 적에게 알리지 말라
+                이순신
+                """.stripIndent();
+    static InputStream in = new ByteArrayInputStream(input.getBytes());
+
+
+
 
     // 시작전에 한번 static으로 mode="test" 입력
     @BeforeAll
@@ -35,12 +41,6 @@ public class AppTest {
     }
 
 
-    static String input = """
-                regist
-                내 죽음을 적에게 알리지 말라
-                이순신
-                """.stripIndent();
-    static InputStream in = new ByteArrayInputStream(input.getBytes());
 
 
     @Test
@@ -50,8 +50,8 @@ public class AppTest {
     }
 
 
-    /*입출력 테스트*/
-    // 1. 입력테스트 (Reader)
+    /*1. 입출력 테스트*/
+    // 1-1) 입력테스트 (Reader)
     @Test
     public void test_reader() throws IOException {
 
@@ -66,7 +66,7 @@ public class AppTest {
 
     }
 
-    //2. 출력 테스트 ( 표준 출력 -> 파일출력으로 redirect)
+    //1-2) 출력 테스트 ( 표준 출력 -> 파일출력으로 redirect)
     @Test
     public void test_redirect_printstream() throws IOException {
 
@@ -81,18 +81,6 @@ public class AppTest {
         BufferedReader br = new BufferedReader(new FileReader(file));
         assertEquals("It's file",br.readLine());
 
-    }
-
-    // regist 테스트
-    @Test
-    public void test_regist() throws IOException {
-        WiseSayingController wc = new WiseSayingController();
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        wc.regist(br);
-
-        br = new BufferedReader(new FileReader(".\\json\\WiseSaying1.json"));
-        assertEquals(new WiseSaying(1,"내 죽음을 적에게 알리지 말라","이순신").toString(),br.readLine());
-        br.close();
     }
 
 
@@ -134,11 +122,14 @@ public class AppTest {
     }
 
 
+    // WiseSayong -> json make
     @Test
     public void test_object__tojson(){
         WiseSaying ws = new WiseSaying(1,"내 죽음을 적에게 알리지 말라","이순신");
         assertEquals("WiseSaying{id=1, saying=\'내 죽음을 적에게 알리지 말라\', author=\'이순신\'}",ws.toString());
     }
+
+    // json -> WiseSaying parse
     @Test
     public void test_json__parse(){
         String json = "WiseSaying{id=1, saying=\'내 죽음을 적에게 알리지 말라\', author=\'이순신\'}";
@@ -148,35 +139,6 @@ public class AppTest {
         assertEquals("이순신", ws.getAuthor());
     }
 
-
-    @Test
-    public void test_ws_replace(){
-        WiseSaying ws = new WiseSaying(1,"명언1","작가1");
-        String newSaying = "명언1-1";
-        ws.replaceSaying(newSaying);
-        assertEquals(newSaying,ws.getSaying());
-    }
-
-    @Test
-    public void test_delete_file(){
-
-        File file = new File("test.txt");
-        file.delete();
-        assertEquals(false,file.exists());
-
-    }
-
-
-    @Test
-    public void test__id__numbering(){
-        // 파일을 remove 후,
-        // remove 한 file 이 가지고 있던 id 는
-        // 재사용이 가능한가?
-
-        // 해당 id 를 재사용하게될때,
-        // numbering의 순서는 더 앞에 있는 번호가 우선시 되야 하는 것인지
-
-    }
 
 
 

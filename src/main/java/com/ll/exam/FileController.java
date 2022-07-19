@@ -1,13 +1,47 @@
 package com.ll.exam;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 
 public class FileController {
 
-    public List<WiseSaying> readFile(List<WiseSaying> wslist) throws IOException {
 
-        File[] filelist = new File(".\\json").listFiles();
+
+    // dataDir 하위 파일 모두 삭제
+    public static void deleteAll(String dataDir) {
+        if(existsFile(dataDir)) {
+            try {
+
+                Files.walk((new File(dataDir)).toPath())
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static boolean existsFile(String dataDir) {
+
+        while(true){
+            File file = new File(dataDir);
+            if(file.exists())
+                return true;
+            else return false;
+        }
+
+
+    }
+
+    public List<WiseSaying> readFile(List<WiseSaying> wslist) throws IOException {
+        if(!checkDir())
+            new File(App.getDataDir()).mkdirs();
+        File[] filelist = new File(App.getDataDir()).listFiles();
         for(File file : filelist){
             if(file.isFile()&&file.canRead()){
                 BufferedReader br = new BufferedReader(new FileReader(file));
@@ -19,13 +53,21 @@ public class FileController {
     }
 
     public void addFile (int idx, WiseSaying ws) throws FileNotFoundException {
-        File path = new File(".\\json\\WiseSaying"+idx+".json");
+        checkDir();
+        File path = new File(".\\"+App.getDataDir()+"\\WiseSaying"+idx+".json");
         PrintStream sysout = System.out;
         PrintStream pr = new PrintStream(new FileOutputStream(path));
         System.setOut(pr);
         System.out.println(ws);
         System.setOut(sysout);
         pr.close();
+    }
+
+    public boolean checkDir() {
+        File dir = new File(App.getDataDir());
+        if(dir.exists())
+            return true;
+        else return false;
     }
 
     public void updateFile(int id,WiseSaying ws) throws IOException {
@@ -50,5 +92,7 @@ public class FileController {
         }
         else System.out.println(file+"존재하지 않습니다.");
     }
+
+
 
 }
